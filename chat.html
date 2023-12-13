@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<h<!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>ChatGPT</title>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    </head>
+    <body>
+        <h1>ChatGPT</h1>
+        <div id="respuesta"></div>
+    
+        <script>
+            $(document).ready(function () {
+                // Llamar a la función al cargar la página
+                obtenerRespuesta();
+            });
+    
+            function obtenerRespuesta() {
+                $.ajax({
+                    type: 'POST',
+                    url: 'botchat.php',  // Archivo PHP que contiene tu función
+                    success: function (data) {
+                        
+                        document.getElementById("respuesta").innerHTML = data;
+                    },
+                    error: function () {
+                        alert('Error al procesar la solicitud.');
+                    }
+                });
+            }
+        </script>
+    </body>
+    </html>
+    

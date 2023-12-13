@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ejemplo de gráfico lineal con Chart.js</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+</head>
+<body>
+
+
+
+    <style>
+        *{ 
+           margin: 0;
+        }
+   
+     </style>
+<div style="width: 500px; height: 500px;" id="chart" ></div>
+
+       <script>
+           // Datos de ejemplo en formato JSON
+           // script.js
+
+ // Realizar una solicitud FETCH para obtener los datos JSON del archivo PHP
+fetch('prueba.php')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        // Llamar a la función para crear el gráfico con los datos recibidos
+        crearGrafico(data);
+    })
+    .catch(error => console.error('Error al obtener los datos:', error));
+
+// Función para crear el gráfico con ApexCharts
+function crearGrafico(data) {
+    // Supongamos que quieres un gráfico de línea que muestre el sentimiento a lo largo del tiempo
+
+    /*var seriesData = data.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        //y: item.sentimiento === 'negativo' ? -1 : 1
+        
+    }));*/
+    var seriesData = data
+        .filter(item => item.sentimiento === 'negativo') // Filtra solo los sentimientos negativos
+        .map(item => ({
+            x: new Date(item.fecha).getTime(),
+            y: -1 // Asigna el valor -1 a todos los sentimientos negativos
+        }));
+
+    var options = {
+        chart: {
+            type: 'line'
+        },
+        series: [
+            {
+                name: 'Sentimiento',
+                data: seriesData
+            }
+        ],
+        xaxis: {
+            type: 'datetime'
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector('#chart'), options);
+
+    chart.render();
+}
+
+       </script>
+</body>
+</html>
