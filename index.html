@@ -46,16 +46,27 @@ function crearGrafico(data) {
         x: new Date(item.fecha).getTime(),
         y: item.cantidad // Cantidad de sentimientos negativos
     }));
-
+    /*
+    var seriesData2 = data2.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }));
+    */
     var options = {
         chart: {
-            type: 'line'
+            type: 'line',
+            
         },
         series: [
             {
                 name: 'Cantidad de sentimientos negativos',
                 data: seriesData
-            }
+            },
+           /* {
+                name: 'Cantidad de sentimientos positivos',
+                data: seriesData2
+            }*/
+            
         ],
         xaxis: {
             type: 'datetime'

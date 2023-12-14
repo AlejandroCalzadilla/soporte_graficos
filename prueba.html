@@ -1,64 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Ejemplo de gráfico lineal con Chart.js</title>
-  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <meta charset="UTF-8">
+    <title>Gráfico de Dispersión</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
-
-
-
-    <style>
-        *{ 
-           margin: 0;
-        }
-   
-     </style>
-<div style="width: 500px; height: 500px;" id="chart" ></div>
-
-       <script>
-           // Datos de ejemplo en formato JSON
-           // script.js
-
- // Realizar una solicitud FETCH para obtener los datos JSON del archivo PHP
-fetch('prueba.php')
-    .then(response => response.json())
-    .then(data => {
-        console.log(data)
-        // Llamar a la función para crear el gráfico con los datos recibidos
-        crearGrafico(data);
-    })
-    .catch(error => console.error('Error al obtener los datos:', error));
-
-// Función para crear el gráfico con ApexCharts
-function crearGrafico(data) {
-    // Supongamos que quieres un gráfico de línea que muestre el sentimiento a lo largo del tiempo
-
-    /*var seriesData = data.map(item => ({
-        x: new Date(item.fecha).getTime(),
-        //y: item.sentimiento === 'negativo' ? -1 : 1
+   <style>
+     *{ 
+        margin: 0;
+     }
+     .bg{
+        background-color:white;
+     }
+     .g{
         
-    }));*/
-    var seriesData = data
-        .filter(item => item.sentimiento === 'negativo') // Filtra solo los sentimientos negativos
-        .map(item => ({
-            x: new Date(item.fecha).getTime(),
-            y: -1 // Asigna el valor -1 a todos los sentimientos negativos
-        }));
+        padding: 5px;
+        border-color: aqua;
+     }
+     .dis{
+        display:flex;
+       
+     }
+  </style>
 
+     
+
+      
+<div class="dis">
+    <div class=" g">
+        <h1>grafico por dia</h1>
+        <div class="bg" style="width: 500px; height: 500px;" id="chart"></div>
+    </div>
+    <div class=" g">
+        <h1>grafico por mes</h1>
+        <div class="bg" style="width: 500px; height: 500px;" id="chartmes"></div>
+    </div>
+</div>
+        <script>
+    fetch('conexion2.php')
+    .then(response => response.json())
+    .then(datosCombinados => {
+        console.log('Datos combinados:', datosCombinados);
+        console.log('Datos negativos:', datosCombinados.negativosdia);
+        console.log('Datos positivos:', datosCombinados.positivosdia);
+        crearGrafico(datosCombinados.negativosdia,datosCombinados.positivosdia,datosCombinados.neutrosdia);
+        crearGrafico2(datosCombinados.negativosmes,datosCombinados.positivosmes,datosCombinados.neutrosmes);
+    });
+    function crearGrafico(data,data2,data3) {
+    // Supongamos que quieres un gráfico de línea que muestre la cantidad de sentimientos negativos por día
+
+    var seriesData = data.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }));
+    
+    var seriesData2 = data2.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    var seriesData3 = data3.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    
     var options = {
         chart: {
-            type: 'line'
+            type: 'line',
+            title: 'por dia', // Agrega el título aqu
+           
         },
         series: [
             {
-                name: 'Sentimiento',
+                name: 'Cant sentimientos negativos',
                 data: seriesData
+            },
+            {
+                name: 'Cant sentimientos positivos',
+                data: seriesData2
+            },
+            {
+                name: 'Cant sentimientos neutros',
+                data: seriesData3
             }
+            
         ],
         xaxis: {
-            type: 'datetime'
+            type: 'datetime',
+            
+           
+        }, 
+        stroke: {
+            curve: 'smooth' // Configura la curva suave para el gráfico de líneas
         }
     };
 
@@ -67,6 +101,65 @@ function crearGrafico(data) {
     chart.render();
 }
 
-       </script>
+function crearGrafico2(data,data2,data3) {
+    // Supongamos que quieres un gráfico de línea que muestre la cantidad de sentimientos negativos por día
+
+    var seriesData = data.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }));
+    
+    var seriesData2 = data2.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    var seriesData3 = data3.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    
+    var options = {
+        chart: {
+            type: 'line',
+            title: 'por dia', // Agrega el título aqu
+           
+        },
+        series: [
+            {
+                name: 'Cant sentimientos negativos',
+                data: seriesData
+            },
+            {
+                name: 'Cant sentimientos positivos',
+                data: seriesData2
+            },
+            {
+                name: 'Cant sentimientos neutros',
+                data: seriesData3
+            }
+            
+        ],
+        xaxis: {
+            type: 'datetime',
+           
+        },
+      
+
+      
+        stroke: {
+            curve: 'smooth' // Configura la curva suave para el gráfico de líneas
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector('#chartmes'), options);
+
+    chart.render();
+}
+ 
+
+    
+
+
+    </script>  
 </body>
 </html>
