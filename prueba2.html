@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gráfico de Dispersión</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+   <style>
+     *{ 
+        margin: 0;
+     }
+     .bg{
+        background-color:white;
+     }
+     .g{
+        
+        padding: 5px;
+        border-color: aqua;
+     }
+     .dis{
+        display:flex;
+       
+     }
+  </style>
+
+
+
+<div class="filtro-fechas">
+    <label for="fechaInicio">Fecha de inicio:</label>
+    <input type="date" id="fechaInicio">
+
+    <label for="fechaFin">Fecha de fin:</label>
+    <input type="date" id="fechaFin">
+
+    <button onclick="aplicarFiltro()">Aplicar Filtro</button>
+</div>
+
+<div class="dis">
+    <div class="g">
+        <h1>grafico por dia</h1>
+        <div class="bg" style="width: 500px; height: 500px;" id="chart"></div>
+    </div>
+    <div class="g">
+        <h1>grafico por mes</h1>
+        <div class="bg" style="width: 500px; height: 500px;" id="chartmes"></div>
+    </div>
+</div>
+
+<script>
+    // Tu código JavaScript aquí
+    actualizarGraficoConFiltro("2022-01-01", "2022-01-10");
+    
+    function aplicarFiltro() {
+        // Captura las fechas seleccionadas
+        var fechaInicio = document.getElementById('fechaInicio').value;
+        var fechaFin = document.getElementById('fechaFin').value;
+
+        // Llama a la función para actualizar el gráfico con las fechas seleccionadas
+        actualizarGraficoConFiltro(fechaInicio, fechaFin);
+    }
+    var chart;
+    var chart2;
+    
+ 
+
+    // La función que debe ser modificada para aceptar fechas como parámetros
+    function crearGrafico(data, data2, data3) {
+        // Tu código para crear el gráfico
+        // Supongamos que quieres un gráfico de línea que muestre la cantidad de sentimientos negativos por día
+
+        var seriesData = data.map(item => ({
+            x: new Date(item.fecha).getTime(),
+            y: item.cantidad // Cantidad de sentimientos negativos
+        }));
+
+        var seriesData2 = data2.map(item => ({
+            x: new Date(item.fecha).getTime(),
+            y: item.cantidad // Cantidad de sentimientos negativos
+        }))
+        var seriesData3 = data3.map(item => ({
+            x: new Date(item.fecha).getTime(),
+            y: item.cantidad // Cantidad de sentimientos negativos
+        }))
+
+        var options = {
+            chart: {
+               
+                type: 'line',
+                title: 'por dia', // Agrega el título aqu
+
+            },
+            series: [
+                {
+                    name: 'Cant sentimientos negativos',
+                    data: seriesData
+                },
+                {
+                    name: 'Cant sentimientos positivos',
+                    data: seriesData2
+                },
+                {
+                    name: 'Cant sentimientos neutros',
+                    data: seriesData3
+                }
+
+            ],
+            xaxis: {
+                type: 'datetime',
+
+
+            },
+            stroke: {
+                curve: 'smooth' // Configura la curva suave para el gráfico de líneas
+            }
+
+        };
+        // Si ya hay un gráfico, actualiza sus opciones y datos
+    if (chart) {
+        chart.updateOptions(options);
+        chart.updateSeries([
+            { name: 'Cant sentimientos negativos', data: seriesData },
+            { name: 'Cant sentimientos positivos', data: seriesData2 },
+            { name: 'Cant sentimientos neutros', data: seriesData3 }
+        ]);
+    } else {
+        // Si no hay un gráfico, crea uno nuevo
+        chart = new ApexCharts(document.querySelector('#chart'), options);
+        chart.render();
+    }
+       // var chart = new ApexCharts(document.querySelector('#chart'), options);
+
+        //chart.render();
+    }
+
+    // Una nueva función que acepta fechas como parámetros y actualiza el gráfico
+    function actualizarGraficoConFiltro(fechaInicio, fechaFin) {
+        // Realiza una llamada a tu backend utilizando fetch
+        fetch(`prueba2c.php?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`)
+            .then(response => response.json())
+            .then(datosCombinados => {
+                console.log(datosCombinados.positivosmes)
+                // Llama a la función crearGrafico con los nuevos datos
+                crearGrafico(datosCombinados.negativosdia, datosCombinados.positivosdia, datosCombinados.neutrosdia);
+                crearGrafico2(datosCombinados.negativosmes,datosCombinados.positivosmes,datosCombinados.neutrosmes);
+            })
+            .catch(error => {
+                console.error('Error al obtener datos filtrados:', error);
+            });
+    }
+    function crearGrafico2(data,data2,data3) {
+    // Supongamos que quieres un gráfico de línea que muestre la cantidad de sentimientos negativos por día
+
+    var seriesData = data.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }));
+    
+    var seriesData2 = data2.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    var seriesData3 = data3.map(item => ({
+        x: new Date(item.fecha).getTime(),
+        y: item.cantidad // Cantidad de sentimientos negativos
+    }))
+    
+    var options = {
+        chart: {
+            type: 'line',
+            title: 'por dia', // Agrega el título aqu
+           
+        },
+        series: [
+            {
+                name: 'Cant sentimientos negativos',
+                data: seriesData
+            },
+            {
+                name: 'Cant sentimientos positivos',
+                data: seriesData2
+            },
+            {
+                name: 'Cant sentimientos neutros',
+                data: seriesData3
+            }
+            
+        ],
+        xaxis: {
+            type: 'datetime',
+           
+        },
+      
+
+      
+        stroke: {
+            curve: 'smooth' // Configura la curva suave para el gráfico de líneas
+           // curve: 'straight',
+        }
+    };
+    if (chart2) {
+        chart2.updateOptions(options);
+        chart2.updateSeries([
+            { name: 'Cant sentimientos negativos', data: seriesData },
+            { name: 'Cant sentimientos positivos', data: seriesData2 },
+            { name: 'Cant sentimientos neutros', data: seriesData3 }
+        ]);
+    } else {
+        // Si no hay un gráfico, crea uno nuevo
+        chart2 = new ApexCharts(document.querySelector('#chartmes'), options);
+        chart2.render();
+    }
+    //var chart = new ApexCharts(document.querySelector('#chartmes'), options);
+
+    //chart.render();
+}
+
+</script>
+
+</body>
+</html>
