@@ -3,7 +3,7 @@
 
 function preguntaChatgpt($pregunta){
     //API KEY DE CHATGPT
-    $apiKey='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';
+    $apiKey='apikey';
     //INICIAMOS LA CONSULTA DE CURL
     //$mensajeAdicional = "realiza un analisis de sentimientos a la  linea siguiente , devuelmeme una cadena asi: positivo,negativo o neutro.....  ,no muestres el contenido de la //linea :";
     //$pregunta=$mensajeAdicional+$pregunta;
